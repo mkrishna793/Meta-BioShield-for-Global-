@@ -1,0 +1,21 @@
+# BioShield Default Configuration
+
+pipeline:
+  run_commec: false  # Set to true if WSL/commec is available
+  run_kmer: true
+  run_ml: true
+  run_protein_impact: true
+
+kmer_screener:
+  threshold: 0.85
+  db_path: "bioshield/data/threat_kmers.json"
+
+ml_screener:
+  rf_model_path: "bioshield/ml/models/rf_model.joblib"
+  xgb_model_path: "bioshield/ml/models/xgb_model.joblib"
+  threshold: 0.70
+
+protein_impact:
+  min_orf_length: 100
+  identity_threshold: 40.0
+  db_path: "bioshield/data/uniprot_toxins.json"
