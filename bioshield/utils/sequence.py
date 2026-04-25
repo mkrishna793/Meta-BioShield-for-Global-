@@ -2,10 +2,39 @@ from collections import Counter
 import numpy as np
 from Bio.Seq import Seq
 
+# Complement table for reverse-complement computation
+_COMPLEMENT = str.maketrans('ACGT', 'TGCA')
+
+def reverse_complement(seq: str) -> str:
+    """Return the reverse complement of a DNA sequence."""
+    return seq.upper().translate(_COMPLEMENT)[::-1]
+
+def canonical_kmer(kmer: str) -> str:
+    """
+    Return the canonical (lexicographically smaller) form of a k-mer.
+    This ensures that a k-mer and its reverse-complement are counted as the same thing.
+    Critical for defeating the reverse-complement evasion attack.
+    """
+    rc = reverse_complement(kmer)
+    return min(kmer, rc)
+
 def extract_kmers(seq: str, k: int) -> Counter:
     """Extract all overlapping k-mers from a sequence."""
     seq = seq.upper()
     kmers = [seq[i:i+k] for i in range(len(seq) - k + 1)]
+    return Counter(kmers)
+
+def extract_canonical_kmers(seq: str, k: int) -> Counter:
+    """
+    Extract canonical k-mers (strand-agnostic).
+    Each k-mer is reduced to its lexicographically smaller form,
+    so ATGC and GCAT (its reverse complement) are counted as one.
+    """
+    seq = seq.upper()
+    kmers = []
+    for i in range(len(seq) - k + 1):
+        kmer = seq[i:i+k]
+        kmers.append(canonical_kmer(kmer))
     return Counter(kmers)
 
 def kmer_frequency_vector(seq: str, k: int, vocab: list[str] = None) -> np.ndarray:
