@@ -5,3 +5,10 @@ __pycache__/
 *.egg-info/
 dist/
 build/
+
+# === CLOSED WEIGHTS: Model files and databases are NOT open-sourced ===
+# These are deployed as a closed Black Box API to prevent adversarial bypass.
+# See README.md "Security & Deployment" section for details.
+bioshield/ml/models/*.joblib
+bioshield/data/threat_kmers.json
+bioshield/data/uniprot_toxins.json
